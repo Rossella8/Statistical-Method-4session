@@ -1,12 +1,9 @@
-# statmeth-hw02
+# statmeth-hw04
 
-Statistical Methods for Data Science @ UniTS (Spring '20) - Homework 02 - Group "I"
+Statistical Methods for Data Science @ UniTS (Spring '20) - Homework 04 - Group "C"
 
 A joint effort of:  
-- [Pietro Morichetti](https://github.com/wilsonjefferson)  
+- [Claudia Dorigo]()  
 - [Leonardo Arrighi](https://github.com/LeonardoArrighi)  
-- [Emanuele Ballarin](https://github.com/emaballarin)  
-
-
----
-As always, this repository has nothing to do with "meth" the drug, apart from getting high on statistics (and R).
+- [Rossella Marvulli]()
+- [Alessandro Scardoni]()
