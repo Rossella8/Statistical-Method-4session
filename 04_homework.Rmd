@@ -49,18 +49,21 @@ local({
 
 # DAAG EXERCISES {.tabset}
 
-## Chapter 8 
+## Chapter 8 {.tabset}
+
+### Exercise 1
+
 
 ### Exercise 2
 In the data set (an artificial one of 3121 patients, that is similar to a subset of the data analyzed in Stiell et al., 2001) minor.head.injury, obtain a logistic regression model relating
 clinically.important.brain.injury to other variables. Patients whose risk is sufficiently high will be sent for CT (computed tomography). Using a risk threshold of 0.025 (2.5%), turn the result into a decision rule for use of CT.
 
-### Solution
+#### Solution
 
 ```{r DAAG_chap8_ex2, code = readLines("src/DAAG_chap8_ex2.R"), echo=TRUE}
 ```
 
-### Observations
+#### Observations
 After importing the dataset I've fitted a logistic model relating `clinically.important.brain.injury` to all other variables. Through `summary()` function I can look at the results. 
 
 Even if there are 2 variables (`GCS.decrease` and `open.skull.factor`) whose coefficient are not significantly different from 0, I don't remove them from the model because the aim of the model is interpretation of all given predictions which are thought to be useful to decide if the patient will be sent for computer tomography, even if thier contribution is very small.
@@ -94,13 +97,13 @@ Fit a Poisson regression model to these data, and compare the estimated coeffici
 $log \lambda = 2 − bx$
 where $b$ is normally distributed with mean 4 and standard deviation 5. [Use the argument `slope.sd=5` in the `poissonsim()` function.] How do the results using the poisson and quasipoisson families differ?
 
-### Solution
+#### Solution
 
-### (a)
+#### (a)
 ```{r DAAG_chap8_ex6_a, code = readLines("src/DAAG_chap8_ex6_a.R"), echo=TRUE}
 ```
 
-### Observations
+#### Observations
 
 First of all I've simulated values from the given model:
 $$
@@ -117,11 +120,11 @@ The residual deviance is the deviance obtained with the model we are evaluating.
 With this model we are able to halve the deviance losing just one degree of freedom (we need to estimate the coefficient for x). It's a worse result than with the original data where the residual deviance was about one third of the null deviance, but still a good result.
 
 
-### (b)
+#### (b)
 ```{r DAAG_chap8_ex6_b, code = readLines("src/DAAG_chap8_ex6_b.R"), echo=TRUE}
 ```
 
-### Observations
+#### Observations
 
 For this second part of the exercise I've simulated values from the model 
 $$
