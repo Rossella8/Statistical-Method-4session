@@ -49,55 +49,98 @@ local({
 
 # DAAG EXERCISES {.tabset}
 
-## Exercise 1 
+## Chapter 8 
 
-Exercise text here.
-
-### Solution
-
-```{r lab_0x, code = readLines("src/lab_0x.R"), echo=TRUE}
-```
-
-Solution here.
-
-### Observations
-
-Comments here.
-
-
-## Chapter 8 - Exercise 1 
-
-The following table shows numbers of occasions when inhibition (i.e., no flow of current across a membrane) occurred within $120$ s, for different concentrations of the protein peptide-C (data are used with the permission of Claudia Haarmann, who obtained these data in the course of her PhD research). The outcome $\texttt{yes}$ implies that inhibition has occurred.
-
-Use logistic regression to model the probability of inhibition as a function of protein concentration.
+### Exercise 2
+In the data set (an artificial one of 3121 patients, that is similar to a subset of the data analyzed in Stiell et al., 2001) minor.head.injury, obtain a logistic regression model relating
+clinically.important.brain.injury to other variables. Patients whose risk is sufficiently high will be sent for CT (computed tomography). Using a risk threshold of 0.025 (2.5%), turn the result into a decision rule for use of CT.
 
 ### Solution
 
-```{r}
-conc <- c(.1, .5, 1, 10, 20, 30, 50, 70, 80, 100, 150)
+```{r DAAG_chap8_ex2, code = readLines("src/DAAG_chap8_ex2.R"), echo=TRUE}
 ```
 
-here's the conc
+### Observations
+After importing the dataset I've fitted a logistic model relating `clinically.important.brain.injury` to all other variables. Through `summary()` function I can look at the results. 
 
-```{r}
-no <- c(7, 1, 10, 9, 2, 9, 13, 1, 1, 4, 3)
-yes <- c(0, 0, 3, 4, 0, 6, 7, 0, 0, 1 ,7)
-```
+Even if there are 2 variables (`GCS.decrease` and `open.skull.factor`) whose coefficient are not significantly different from 0, I don't remove them from the model because the aim of the model is interpretation of all given predictions which are thought to be useful to decide if the patient will be sent for computer tomography, even if thier contribution is very small.
 
-here's no+yes
-let's sum
+In order to convert the result of the logistic model into a rule for the use of CT, I've converted the probability threshold 0.025 in terms of the linear model applying the logit function so I can directly evaluate the effect of the covariates through their regression coefficients:
+$$
+logit(0.025)=log\Big(\frac{0.025}{1-0.025}\Big)=-3.663562
+$$
 
-```{r}
-n <- no + yes
-```
+The intercept of the fitted model is -4.4972 and it correspond to the value for an individual which has value 0 on all the covariates. In order to exceed the threshold we need an increment equal to 0.8336726.
+Now I can analyse which predictors (or prediction combinations) will lead to such increasement if they assume value 1.
 
-plot
+There are some variables whose contribution alone leads to exceed the threshold. These are `age.65`, `basal.skull.fracture`, `GCS.13`, `GCS.15.2hours`, `high.risk`, `loss.of.consciousness` and `vomiting`. Note that all of them except `loss.of.consciousness` and `GCS.13` will lead to exceed the threshold even if `GCS.decrease` is equal to 1 (this is the only variable whose contibute is negative). The other variables `amnesia.before` and `vomiting` should be combined with another variable with positive coefficient in order to exceed the threshold.
 
-```{r}
-plot(log(conc), log((yes+0.5)/(no+0.5)))
+So the rule is that an individual will be sent for computer tomography if one of the following conditions is satisfied:
+
+- at least one among `age.65`, `basal.skull.fracture`, `GCS.15.2hours`, `high.risk` and `vomiting` have value equal to 1 (`GCS.decrease` can also be 1);
+- `GCS.13` or `loss.of.consciousness` are equal to 1 and `GCS.decrease` is equal to 0;
+- at least two among `GCS.13`, `high.risk`, `amnesia.before` and `vomiting` are equal to 1 (`GCS.decrease` can also be 1).
+
+
+
+### Exercise 6
+As in the previous exercise, the function `poissonsim()` allows for experimentation with Poisson regression. In particular, `poissonsim()` can be used to simulate Poisson responses with log-rates equal to $a + bx$, where $a$ and $b$ are fixed values by default.
+
+(a) Simulate 100 Poisson responses using the model
+$log \lambda = 2 − 4x$
+for $x = 0, 0.01, 0.02 ..., 1.0$.
+Fit a Poisson regression model to these data, and compare the estimated coefficients with the true coefficients. How well does the estimated model predict future observations?
+(b) Simulate 100 Poisson responses using the model
+$log \lambda = 2 − bx$
+where $b$ is normally distributed with mean 4 and standard deviation 5. [Use the argument `slope.sd=5` in the `poissonsim()` function.] How do the results using the poisson and quasipoisson families differ?
+
+### Solution
+
+### (a)
+```{r DAAG_chap8_ex6_a, code = readLines("src/DAAG_chap8_ex6_a.R"), echo=TRUE}
 ```
 
 ### Observations
 
-Comments here.
+First of all I've simulated values from the given model:
+$$
+log \lambda = 2-4x\\ y \sim Poisson(\lambda) 
+$$
 
+Then I've fitted a poisson regression model on the simulated data. Looking at the `summary()` function I can compare the true parameters $a=2$ and $b=-4$ with the estimated ones $\hat{a}=2.0285$ and $\hat{b}=-4.0580$. I can see tht they are really closed to the real values. 
+
+In order to check if the model works well on new data, I've changed the seed and I've sampled new values from the true model. Then I've compared them with the values obtained with the estimated model. From the last plot I can see that the model seems to work well also in predicting new data.
+
+It can be seen also looking at the null and residual deviance computed on the new data.\\
+The null deviance is the deviance obtained with a model which includes only the intercept, a model in which for each observation the estimate is the sample mean of observed y. For new data the null deviance is 642.14. \\
+The residual deviance is the deviance obtained with the model we are evaluating. In our case we obtain a residual deviance equal to 272.23.\\
+With this model we are able to halve the deviance losing just one degree of freedom (we need to estimate the coefficient for x). It's a worse result than with the original data where the residual deviance was about one third of the null deviance, but still a good result.
+
+
+### (b)
+```{r DAAG_chap8_ex6_b, code = readLines("src/DAAG_chap8_ex6_b.R"), echo=TRUE}
+```
+
+### Observations
+
+For this second part of the exercise I've simulated values from the model 
+$$
+log \lambda = 2-bx\\ b\sim \mathcal{N}(4,5)\\y \sim Poisson(\lambda) 
+$$
+
+The standard deviation is very high so I'm not surprised that the variability in the observations is high, in particular with respect to the mean (sample mean $= 4.84$ and sample variance $= 235.41$).  So we are in an overdispersion situation which can be expressed using a quasi-poisson model:
+$$
+\begin{cases}
+E(y_i)=\lambda\\
+Var(y_i)=\Phi  E(y_i)\\
+\end{cases}
+$$
+where $\Phi$ is the overdispersion parameter. 
+
+The fitted poisson model does not take into account the overdispersion, indeed we can see from the summary of the model that the dispersion parameter is taken to be 1.
+
+The fitted quasi-poisson model insted does take into account overdispersion and estimates this parameter to be equal to almost 50.
+
+The estimated coefficients of the two models are the same and while the intercept is quite close to the real value ($\hat{a}=1.724, a=2$), the coefficient for x is very different from the real value ($\hat{b}=-0.302, b=-4$).
+
+The reason why we prefer the quasi-poisson model is because the standard error for the x coefficient is 10 times higher than in the poisson model. This tells us that the estimated value is not really accurate. 
