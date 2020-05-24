@@ -111,6 +111,12 @@ Then I've fitted a poisson regression model on the simulated data. Looking at th
 
 In order to check if the model works well on new data, I've changed the seed and I've sampled new values from the true model. Then I've compared them with the values obtained with the estimated model. From the last plot I can see that the model seems to work well also in predicting new data.
 
+It can be seen also looking at the null and residual deviance computed on the new data.\\
+The null deviance is the deviance obtained with a model which includes only the intercept, a model in which for each observation the estimate is the sample mean of observed y. For new data the null deviance is 642.14. \\
+The residual deviance is the deviance obtained with the model we are evaluating. In our case we obtain a residual deviance equal to 272.23.\\
+With this model we are able to halve the deviance losing just one degree of freedom (we need to estimate the coefficient for x). It's a worse result than with the original data where the residual deviance was about one third of the null deviance, but still a good result.
+
+
 ### (b)
 ```{r DAAG_chap8_ex6_b, code = readLines("src/DAAG_chap8_ex6_b.R"), echo=TRUE}
 ```

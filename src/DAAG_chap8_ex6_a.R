@@ -11,9 +11,18 @@ summary(poisson_model)
 # compare the true model and the fitted one on new data
 new_data <- poissonsim(x,a=2,b=-4,seed=7)
 
+# visually
 set.seed(7) #change seed
 predictions <- predict(poisson_model,newdata=new_data,type="response")
 plot(x,new_data[,2],main="True vs Fitted model on new data",xlab="x",ylab="y")
 lines(x,predictions,col=2,lwd=2)
 legend("topright",legend=c("true values","fitted model"),
        col=c(1,2),lty=c(NA,1),pch=c(1,NA),lwd=c(NA,2))
+
+# computing deviance
+# null deviance - all obs estimated with the mean
+null_deviance <- sum((new_data[,2]-mean(new_data[,2]))^2)
+null_deviance
+
+residual_deviance <- sum((new_data[,2]-predictions)^2)
+residual_deviance
